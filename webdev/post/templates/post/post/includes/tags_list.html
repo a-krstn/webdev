@@ -1,0 +1,6 @@
+{% if tags %}
+  <h6>Теги:</h6>
+    {% for t in tags %}
+    <a href="{% url 'post_list_tag' t.slug %}" class=link-offset-3">#{{ t }}</a>
+    {% endfor %}
+{% endif %}

@@ -1,0 +1,69 @@
+{% extends 'post/base.html' %}
+{% load tag_example %}
+
+{% block header %}
+{% endblock %}
+
+<!-- расширение блок-контента -->
+{% block content %}
+    {% load thumbnail %}
+    {% if posts %}
+        {% for post in posts %}
+            <div class="row">
+                <h4>
+                    <a href="{{ post.get_absolute_url }}"
+                       class="link-underline-light">{{ post.title }}</a>
+                </h4>
+
+                <p>
+                <small class="text-muted">
+                    {% if post.cat %}
+                        Категория:
+                        <a href="{% url 'category_list' post.cat.slug %}"
+                           class="link-underline-light">{{ post.cat.cat_title }}</a>
+                        <br>
+                    {% endif %}
+                    Автор:
+                    <a href="{% url 'account:profile' post.author.pk %}"
+                       class="link-underline-light">{{ post.author }}</a>
+                    <br>
+                    Время и дата публикации:
+                    {{ post.publish|date:"H:i d.m.Y" }}
+                </small>
+                </p>
+
+                {% if post.title_image %}
+                    <img src="{{ post.title_image|thumbnail_url:'preview1' }}">
+                {% endif %}
+
+                <p>{{ post.body|safe|truncatewords:50 }}</p>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-10 text-start">
+                        <a class="btn btn-outline-primary btn-sm mr-auto"
+                           href="{{ post.get_absolute_url }}"
+                           role="button"
+                           style="">Читать статью</a>
+                    </div>
+
+                    <div class="col-2 text-end">
+                        <small class="text-muted">
+                            <i class="fa-regular fa-eye"></i> {% get_total_views post.id %}
+                        </small>
+                        &nbsp
+                        <small class="text-muted">
+                            <i class="fa-regular fa-comment"></i> {{ post.comments.count }}
+                        </small>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>В базе данных нет статей</p>
+    {% endif %}
+    {% include "pagination.html" with page=posts %}
+{% endblock %}

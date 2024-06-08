@@ -1,0 +1,64 @@
+{% extends 'post/base.html' %}
+{% load thumbnail %}
+
+{% block header%}
+    Профиль пользователя {{ username }}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2 text-center">
+                <img src="{{ username.photo|thumbnail_url:'preview2' }}">
+            </div>
+            <div class="col-10">
+                <p><small>
+                    Пользователь: {{ username }}<br>
+                    {% if username.first_name %}
+                        Имя: {{ username.first_name }} {{ username.last_name }}<br>
+                    {% endif %}
+                    Дата регистрации: {{ username.date_joined|date:"d.m.Y" }}
+                </small></p>
+            </div>
+        </div>
+            <form action="{% url 'account:follow' username.pk %}" method="post">
+                {% csrf_token %}
+                {% if request.user.is_authenticated and request.user != username %}
+                    {% if request.user in username.followers.all %}
+                        <input class="btn btn-outline-primary btn-sm"
+                               type="submit"
+                               value="Отписаться">
+                    {% else %}
+                        <input class="btn btn-outline-primary btn-sm"
+                               type="submit"
+                               value="Подписаться">
+                    {% endif %}
+                {% endif %}
+            </form>
+        <div class="row">
+            <p>Подписчики: {{ username.followers.count }}</p>
+            <p>Подписки: {{ username.following.count }}</p>
+        </div>
+        <div class="row">
+            {% if username_posts %}
+                <p>Последние посты пользователя:</p>
+                {% for post in username_posts %}
+                <p>{{ post.created|date:"d.m.Y" }} <a href="{{ post.get_absolute_url }}"
+                                                      class="link-underline-light">{{ post.title }}</a></p>
+                {% endfor %}
+            {% else %}
+                <p>Нет опубликованных постов</p>
+            {% endif %}
+
+            {% if user == username %}
+                <p><a href="{% url 'account:edit_profile' %}"
+                      class="link-underline-light">Изменить профиль</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}

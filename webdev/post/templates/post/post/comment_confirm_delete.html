@@ -1,0 +1,9 @@
+{% extends 'post/base.html' %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    <p>Вы действительно хотите удалить комментарий пользователя {{ comment.commentator }}?</p>
+    <p><input class="btn btn-outline-primary btn-sm" type="submit" value="Да"></p>
+  </form>
+{% endblock %}

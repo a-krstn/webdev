@@ -1,0 +1,22 @@
+{% extends 'post/base.html' %}
+
+{% block header %}
+    Создание поста
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        <div class="col-7">
+            {{ form.non_field_errors }}
+            {% for f in form %}
+                <p>
+                    <b>{{ f.label }}</b><br>
+                    {{ f }}
+                </p>
+                {{ f.errors }}
+            {% endfor %}
+        </div>
+        <p><input class="btn btn-outline-primary btn-sm" type="submit" value="Опубликовать"></p>
+        {% csrf_token %}
+    </form>
+{% endblock %}

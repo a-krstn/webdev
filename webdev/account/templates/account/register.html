@@ -1,0 +1,36 @@
+{% extends 'post/base.html' %}
+
+{% block header %}
+    Регистрация
+{% endblock %}
+
+{% block content %}
+    <p>
+        Пожалуйста, используйте форму ниже для регистрации
+    </p>
+
+    <form method="post">
+        <div class="container-fluid">
+            {{ form.non_field_errors }}
+            {% for f in form %}
+                <div class="row">
+                    <p>
+                        <small>{{ f.label }}</small>
+                        <br>
+                        {{ f }}
+                    </p>
+                    {{ f.errors }}
+                </div>
+            {% endfor %}
+            <p><input class="btn btn-outline-primary btn-sm "
+                      type="submit"
+                      value="Зарегистрироваться"></p>
+        </div>
+        {% csrf_token %}
+    </form>
+    <p>
+        Уже есть аккаунт?
+        <a href="{% url 'account:login' %}"
+           class="link-underline-light">Войти</a>
+    </p>
+{% endblock %}

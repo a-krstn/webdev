@@ -1,0 +1,18 @@
+{% for comment in comments %}
+    {% load thumbnail %}
+        <table class="table table-primary table-stripped">
+            <tr>
+                <td>
+                    {% if comment.commentator.photo %}
+                        <img src="{% thumbnail comment.commentator.photo 50x50 %}">
+                    {% else %}
+                        <img src="{{ default_image }}" width="50" border="1px solid #ffffff">
+                    {% endif %}
+                </td>
+                <td align="left">
+                    <b>{{ comment.commentator }}</b> <em>{{ comment.created|date:"H:i d.m.Y" }}</em><br>
+                    {{ comment.body }}
+                </td>
+            </tr>
+        </table>
+{% endfor %}

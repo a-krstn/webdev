@@ -1,0 +1,51 @@
+{% extends 'post/base.html' %}
+
+{% block header %}
+    Авторизация
+{% endblock %}
+
+{% block content %}
+    <p>Авторизуйтесь с помощью</p>
+
+    <p>
+        <a href="{% url 'social:begin' 'github' %}"
+           class="link-underline-light"><i class="fa-brands fa-github"></i> GitHub</a>
+        &nbsp
+        <a href="{% url 'social:begin' 'vk-oauth2' %}"
+           class="link-underline-light"><i class="fa-brands fa-vk"></i> VK</a>
+    </p>
+
+    <p>Или используйте форму ниже</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <div class="container-fluid">
+            {{ form.non_field_errors }}
+            {% for f in form %}
+                <div class="row">
+                    <p>
+                        <small>{{ f.label }}</small>
+                        <br>
+                        {{ f }}
+                    </p>
+                    {{ f.errors }}
+                </div>
+            {% endfor %}
+
+
+
+            <p><a href="{% url 'account:password_reset' %}"
+                  class="link-underline-light">Забыли пароль?</a></p>
+
+            <p><input class="btn btn-outline-primary btn-sm"
+                      type="submit"
+                      value="Войти"></p>
+        </div>
+    </form>
+    <p>
+        Ещё не зарегистрированы?
+        <a href="{% url 'account:register' %}"
+           class="link-underline-light">Зарегистрироваться</a>
+    </p>
+{% endblock %}

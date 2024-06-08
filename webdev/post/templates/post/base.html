@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Заголовок -->
+    {% load static %}
+    {% load tag_example %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial_scale=1">
+    <link rel="stylesheet" href="{% static 'css/iconsfont.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+    <link rel="icon" href="data:;base64,=">
+    <!--<script src="https://kit.fontawesome.com/1c6c253520.js" crossorigin="anonymous"></script>-->
+    <!--script defer src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script-->
+    <title>{{ title }}</title>
+    <!-- Конец заголовка -->
+</head>
+
+<body>
+    <!-- Основной контейнер с сайдбарами и контент-блоком -->
+    <div class="container-fluid">
+        <!-- Строка с главным меню -->
+        <div class="row align-self-center title">
+            <div class="col-1"></div>
+            <div class="col-1 text-center">
+                <span class="align-middle">
+                    <a href="{% url 'index' %}" class="menu">Главная</a>
+                </span>
+            </div>
+            <div class="col-1 text-center">
+                <span class="align-middle">
+                    <a href="{% url 'about' %}" class="menu">О сайте</a>
+                </span>
+            </div>
+            <div class="col-1 text-center">
+                <span class="align-middle">
+                    <a href="{% url 'contacts' %}" class="menu">Контакты</a>
+                </span>
+            </div>
+            <div class="col-4 text-center">
+                <span class="align-middle">
+                    webdev.com
+                </span>
+            </div>
+            <div class="col-1 text-center">
+                <span class="align-middle">
+                    <a href="{% url 'post_search' %}"
+                       class="menu"><i class="fa-solid fa-magnifying-glass"></i> Поиск</a>
+                </span>
+            </div>
+            <div class="col-2 text-center">
+                {% if user.is_authenticated %}
+                    <span class="align-middle">
+                        <a href="{% url 'account:profile' user.pk %}"
+                           class="menu">{{ user.username }}</a> |
+                        <a href="{% url 'account:logout' %}"
+                           class="menu">Выйти</a>
+                    </span>
+                {% else %}
+                    <span class="align-middle">
+                        <a href="{% url 'account:login' %}"
+                           class="menu">Войти</a> |
+                        <a href="{% url 'account:register' %}"
+                           class="menu">Регистрация</a>
+                    </span>
+                {% endif %}
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- Конец строки с главным меню -->
+
+        <!-- Строка с сайдбарами и блок-контентом -->
+        <div class="row text-left text-body">
+            <div class="col-1 side"></div>
+
+            <!-- Левый сайдбар -->
+            <div class="col-2 bg-light">
+                {% block sidebar %}
+                    <nav class="nav flex-column">
+                        <p>
+                        <p><a href="{% url 'index' %}"
+                              class="link-underline-light">Все категории</a></p>
+                        {% if request.user.is_authenticated %}
+                        <p>
+                            <a href="{% url 'following_list' %}"
+                               class="link-underline-light">Моя лента</a>
+                        </p>
+                        {% endif %}
+
+                        {% show_categories %}
+                    </nav>
+                    <hr>
+                {% endblock %}
+            </div>
+            <!-- Конец левого сайдбара -->
+
+            <!-- Блок-контент -->
+            <div class="col-6">
+                <!-- Заголовок блок-контента -->
+                <p><h4>
+                    {% block header%}
+                    {% endblock header %}
+                </h4>
+
+                <!-- Конец заголовка блок-контента -->
+
+                <!-- Основная часть блок-контента -->
+                <div class="row text-left">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <!-- Конец основной части блок-контента -->
+            </div>
+            <!-- Конец блок-контента -->
+
+            <!-- Правый сайдбар -->
+            <div class="col-2 bg-light">
+                {% block right_sidebar %}
+                    <h6>
+                        <p>
+                        {% if request.user.is_authenticated %}
+                            <p>
+                                <a href="{% url 'create_post' %}"
+                                   class="link-underline-light">Создать пост</a>
+                            </p>
+                        {% endif %}
+                    </h6>
+
+                    <h6>Наиболее обсуждаемые посты</h6>
+                    {% get_most_commented_posts as most_commented_posts %}
+                    <ul>
+                        {% for post in most_commented_posts %}
+                        <li>
+                            <a href="{{ post.get_absolute_url }}"
+                               class="link-underline-light">{{ post.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% show_all_tags %}
+                {% endblock %}
+            </div>
+            <!-- Конец правого сайдбара -->
+
+            <div class="col-1 side"></div>
+        </div>
+        <!-- Конец строка с сайдбарами и блок-контентом -->
+
+        <!-- Хлебные крошки -->
+        <div class= "row breadcrumps text-center">
+            <div class="col-1"></div>
+
+            <div class="col-10">
+                <span class="align-middle">
+                    {% block footer %}
+                        <p>Webdev, 2024</p>
+                    {% endblock footer%}
+                </span>
+            </div>
+
+            <div class="col-1"></div>
+        </div>
+        <!-- Конец хлебных крошек -->
+
+    </div>
+    <!-- Конец основного контейнера с сайдбарами и контент-блоком -->
+</body>
+</html>

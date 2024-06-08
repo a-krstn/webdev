@@ -1,0 +1,8 @@
+<h6>Оставить комментарий</h6>
+    <form action="{% url 'post_comment' post.id %}" method="post">
+        {% for f in form %}
+            <p>{{ f }}</p>
+        {% endfor %}
+        {% csrf_token %}
+        <p><input class="btn btn-outline-primary btn-sm" type="submit" value="Отправить"></p>
+    </form>

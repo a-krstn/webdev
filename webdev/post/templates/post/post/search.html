@@ -1,0 +1,38 @@
+{% extends 'post/base.html' %}
+
+{% block header %}
+    Поиск
+{% endblock %}
+
+{% block content %}
+    {% if query %}
+        {% with results.count as total_results %}
+            <h6>Найдено результатов по запросу "{{ query }}" - {{ total_results }}</h6>
+        {% endwith %}
+
+        {% for post in results %}
+            <h5>
+                <a href="{{ post.get_absolute_url }}" class="link-underline-light">
+                    {{ post.title }}
+                </a>
+            </h5>
+            <p>{{ post.text|safe|truncatewords:10 }}</p>
+        {% empty %}
+            <p>По Вашему запросу ничего не найдено</p>
+        {% endfor %}
+        <p><a href="{% url 'post_search' %}" class="link-underline-light">Искать снова</a></p>
+    {% else %}
+        <form method="get">
+            {% for f in form %}
+                <p>
+                    {{ f.label }}
+                    <br>
+                    {{ f }}
+                </p>
+            {% endfor %}
+            <p><input class="btn btn-outline-primary btn-sm"
+                      type="submit"
+                      value="Найти"></p>
+        </form>
+    {% endif %}
+{% endblock %}

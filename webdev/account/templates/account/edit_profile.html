@@ -1,0 +1,37 @@
+{% extends 'post/base.html' %}
+
+{% block header %}
+    Изменение данных
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-2 text-center">
+                    {% if user.photo %}
+                        <p><img src="{{ user.photo.url }}" width="80"></p>
+                    {% else %}
+                        <p><img src="{{ default_image }}" width="80"></p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                {{ form.non_field_errors }}
+                {% for f in form %}
+                    <p>
+                        {{ f.label }}:
+                        <br>
+                        {{ f }}
+                    </p>
+                {% endfor %}
+                <p><a href="{% url 'account:password_change' %}">Сменить пароль</a></p>
+                <p><input class="btn btn-outline-primary btn-sm"
+                          type="submit"
+                          value="Сохранить">
+                </p>
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,83 @@
+services:
+
+  db:
+    image: postgres:16.0
+    container_name: postgres
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+  cache:
+    image: redis:7.2.4
+    restart: always
+    volumes:
+      - ./data/cache:/data
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    restart: always
+    volumes:
+      - .:/webdev
+      - static_volume:/webdev/webdev/static
+      - media_volume:/webdev/webdev/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - cache
+
+  nginx:
+    image: nginx:1.25.0
+    restart: always
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - static_volume:/var/www/html/static
+      - media_volume:/media
+      - .:/webdev
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+
+  celery:
+    build: .
+    command: bash -c "cd webdev && celery -A webdev worker --loglevel=info"
+    volumes:
+      - .:/webdev
+    depends_on:
+      - cache
+      - db
+    env_file:
+      - .env
+
+  celery-beat:
+    build: .
+    command: bash -c "cd webdev && celery -A webdev beat --loglevel=info"
+    volumes:
+      - .:/webdev
+    depends_on:
+      - cache
+      - db
+    env_file:
+      - .env
+
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
+    command: [ '/wait-for-it.sh' ]
+
+volumes:
+  static_volume:
+  media_volume:

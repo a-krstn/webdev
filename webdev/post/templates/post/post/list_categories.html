@@ -1,0 +1,3 @@
+{% for cat in cats %}
+  <p><a href="{% url 'category_list' cat.slug %}" class="link-underline-light">{{ cat.cat_title }}</a></p>
+{% endfor %}

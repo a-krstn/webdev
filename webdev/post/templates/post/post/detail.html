@@ -1,0 +1,129 @@
+{% extends 'post/base.html' %}
+{% load tag_example %}
+{% load humanize %}
+{% load thumbnail %}
+
+{% block content %}
+    <h4>{{ post.title }}</h4>
+
+    <small class="text-muted">
+        {% if post.cat %}
+        Категория:
+        <a href="{% url 'category_list' post.cat.slug %}"
+           class="link-underline-light">{{ post.cat.cat_title }}</a>
+        <br>
+        {% endif %}
+        Автор:
+        <a href="{% url 'account:profile' post.author_id %}"
+           class="link-underline-light">{{ post.author.username }}</a>
+        <br>
+        Время и дата публикации:
+        {{ post.publish|date:"H:i d.m.Y" }}
+    </small>
+    <p></p>
+
+    {% if post.title_image %}
+        <img src="{{ post.title_image|thumbnail_url:'preview1' }}">
+    {% endif %}
+
+    {{ post.body|safe }}
+
+    {% if post.tags %}
+        <p>
+            <b>Теги</b>:
+            {% for tag in post.tags.all %}
+                {% if not forloop.last %}
+                    <a href="{% url 'post_list_tag' tag.slug %}" class="link-underline-light">{{ tag }}</a>,
+                {% else %}
+                    <a href="{% url 'post_list_tag' tag.slug %}" class="link-underline-light">{{ tag }}</a>
+                {% endif %}
+            {% endfor %}
+        </p>
+    {% endif %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <a class="btn btn-outline-primary btn-sm mr-auto"
+                   href="{% url 'index' %}"
+                   role="button"
+                   style="">Назад</a>
+            </div>
+            <div class="col-4 text-end">
+                {% if user.is_superuser or user == post.author %}
+                    <small class="text-muted">
+                        <a href="{% url 'edit_page' post.slug %}"
+                           class="link-underline-light fa-solid fa-pen"
+                           title="Редактировать"></a>
+                    </small>
+                        &nbsp
+                    <small class="text-muted">
+                        <a href="{% url 'delete_post' post.slug %}"
+                           class="link-underline-light fa-solid fa-trash"
+                           title="Удалить">
+                        </a>
+                    </small>
+                {% endif %}
+                &nbsp
+                <small class="text-muted">
+                    <i class="fa-regular fa-eye"></i> {% get_total_views post.id %}
+                </small>
+            </div>
+        </div>
+    </div>
+    <p><hr>
+
+    {% if comments %}
+        <!-- отображение количества комментариев -->
+        {% with comments.count as total_comments %}
+            <h6>Комментарии: {{ total_comments }}</h6>
+        {% endwith %}
+        <!-- конец блока отображения -->
+
+        <!-- перебор комментариев -->
+            <table class="table table-striped table-hover">
+                {% for comment in comments %}
+                <tr>
+                    <td width="66.4">
+                        <img src="{{ comment.author.photo|thumbnail_url:'preview2' }}">
+                    </td>
+                    <td>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-10 text-start">
+                                    <a href="{% url 'account:profile' comment.author_id %}"
+                                       class="link-underline-light"><small><b>{{ comment.author }}</b></small></a>
+                                    <small>{{ comment.created|naturaltime }}</small>
+                                </div>
+                                <div class="col-2 text-end">
+                                    {% if user.is_superuser or user == comment.author %}
+                                        <small>
+                                            <a href="{% url 'edit_comment' comment.pk %}"
+                                               class="link-underline-light fa-solid fa-pen"
+                                               title="Изменить комментарий">
+                                            </a>
+                                            &nbsp
+                                            <a href="{% url 'delete_comment' comment.pk %}"
+                                               class="link-underline-light fa-solid fa-trash"
+                                               title="Удалить комментарий">
+                                            </a>
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <small>{{ comment.body }}</small>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                    <p>Комментариев пока нет</p>
+                {% endfor %}
+            </table>
+    {% endif %}
+        <!-- конец перебора -->
+
+
+    {% if perms.post.add_comment %}
+        {% include "post/post/includes/comment_form.html" %}
+    {% endif %}
+{% endblock %}
