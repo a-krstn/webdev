@@ -240,7 +240,9 @@ class AboutView(generic.TemplateView):
     Отображение страницы "О сайте"
     """
 
-    text = """Веб-приложение создано с использованием Django + DRF"""
+    text = """
+    Приложение представляет собой тематический коллективный блог с элементами новостного сайта.
+    Проект на GitHub: https://github.com/a-krstn/webdev"""
     template_name = 'post/post/about.html'
     extra_context = {'title': 'О сайте',
                      'text': text}
@@ -251,7 +253,7 @@ class ContactsView(generic.TemplateView):
     Отображение страницы "Контакты"
     """
 
-    text = """Проект на GitHub"""
+    text = """GitHub автора проекта: https://github.com/a-krstn"""
     template_name = 'post/post/contacts.html'
     extra_context = {'title': 'Контакты',
                      'text': text}
