@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
 
   db:
@@ -75,8 +77,8 @@ services:
     ports:
       - "5555:5555"
     volumes:
-      - ./wait-for-it.sh:/wait-for-it.sh
-    command: [ '/wait-for-it.sh' ]
+      - ./wait-for-broker.sh:/wait-for-broker.sh
+    command: [ '/wait-for-broker.sh' ]
 
 volumes:
   static_volume:

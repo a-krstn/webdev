@@ -1,5 +1,6 @@
 #!/bin/sh
 
+./wait-for-it.sh db:5432
 cd webdev
 python manage.py makemigrations
 python manage.py migrate
