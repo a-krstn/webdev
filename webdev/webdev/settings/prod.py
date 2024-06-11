@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
 ADMINS = [
     ('Admin', os.getenv('EMAIL_HOST_USER')),
 ]

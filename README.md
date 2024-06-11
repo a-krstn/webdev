@@ -44,7 +44,7 @@
    перечислен в файле .env.example.
 5. **Запуск приложения**<br>
    (**Важно:** для успешного запуска приложения локально необходим
-   развернутый сервер Redis на порту 6379)
+   развернутый сервер Redis на порту 6379)<br>
    Локально: `python manage.py runserver --settings=webdev.settings.local`<br>
    В docker: `docker compose up`<br>
    Приложение будет доступно по адресу `http://127.0.0.1:8000/`
@@ -63,3 +63,5 @@
 сервер Redis на порту 6379)<br>
 `python manage.py test . --settings=webdev.settings.local`
 
+## Лицензия
+MIT License
