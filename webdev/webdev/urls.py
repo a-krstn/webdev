@@ -23,7 +23,9 @@ from django.conf import settings
 
 from post.sitemaps import PostSitemap
 from post.views import page_not_found, access_is_denied
-from .yasg import urlpatterns as doc_urls
+from .spectacular import urlpatterns as doc_urls
+# from .yasg import urlpatterns as doc_urls
+
 
 sitemaps = {
     'posts': PostSitemap,
@@ -56,7 +58,7 @@ urlpatterns = [
     path('sitemap.xml',
          cache_page(86400)(sitemap),
          {'sitemaps': sitemaps},
-         name='django.contrib.sitemaps.views.sitemap')
+         name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 handler403 = access_is_denied
