@@ -23,7 +23,7 @@ djangorestframework-simplejwt==5.3.1
 djoser==2.2.2
 dnspython==2.6.1
 python-dotenv
-drf-yasg==1.21.7
+drf-spectacular==0.27.2
 easy-thumbnails==2.8.5
 eventlet==0.36.1
 flower==2.0.1

@@ -24,7 +24,6 @@ from django.conf import settings
 from post.sitemaps import PostSitemap
 from post.views import page_not_found, access_is_denied
 from .spectacular import urlpatterns as doc_urls
-# from .yasg import urlpatterns as doc_urls
 
 
 sitemaps = {
